@@ -26,17 +26,30 @@ with col1:
     st.info(f"Total Charges (auto-calculated): ${TotalCharges:.2f}")
 
 with col2:
+
+    # Phone Service
     PhoneService = st.radio("Phone Service?", ["No", "Yes"], horizontal=True)
 
-    # Only show Multiple Lines if Phone Service is Yes
+    # If Phone Service is No, customer MUST have internet
+    # So remove "No" from Internet options
+    if PhoneService == "No":
+        st.caption("Customer has no phone service — must have internet service.")
+        InternetService = st.selectbox("Internet Service", ["DSL", "Fiber optic"])
+    else:
+        InternetService = st.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
+
+    # If Internet is No, Phone must be Yes — show a warning if user tries both No
+    if InternetService == "No" and PhoneService == "No":
+        st.error("A customer must have at least Phone or Internet service.")
+        st.stop()
+
+    # Multiple Lines — only if Phone Service is Yes
     if PhoneService == "Yes":
         MultipleLines = st.selectbox("Multiple Lines?", ["No", "Yes"])
     else:
         MultipleLines = "No phone service"
 
-    InternetService = st.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
-
-    # Only show internet options if customer has internet
+    # Internet sub-options — only if Internet Service is not No
     if InternetService != "No":
         OnlineSecurity = st.selectbox("Online Security", ["No", "Yes"])
         OnlineBackup = st.selectbox("Online Backup", ["No", "Yes"])
