@@ -20,18 +20,38 @@ with col1:
     Dependents = st.radio("Has Dependents?", ["No", "Yes"], horizontal=True)
     tenure = st.slider("Tenure (months)", 0, 72, 12)
     MonthlyCharges = st.number_input("Monthly Charges ($)", min_value=20.0, max_value=120.0, value=65.0)
-    TotalCharges = st.number_input("Total Charges ($)", min_value=0.0, max_value=9000.0, value=800.0)
+
+    # Auto compute TotalCharges
+    TotalCharges = tenure * MonthlyCharges
+    st.info(f"Total Charges (auto-calculated): ${TotalCharges:.2f}")
 
 with col2:
     PhoneService = st.radio("Phone Service?", ["No", "Yes"], horizontal=True)
-    MultipleLines = st.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
+
+    # Only show Multiple Lines if Phone Service is Yes
+    if PhoneService == "Yes":
+        MultipleLines = st.selectbox("Multiple Lines?", ["No", "Yes"])
+    else:
+        MultipleLines = "No phone service"
+
     InternetService = st.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
-    OnlineSecurity = st.selectbox("Online Security", ["No", "Yes", "No internet service"])
-    OnlineBackup = st.selectbox("Online Backup", ["No", "Yes", "No internet service"])
-    DeviceProtection = st.selectbox("Device Protection", ["No", "Yes", "No internet service"])
-    TechSupport = st.selectbox("Tech Support", ["No", "Yes", "No internet service"])
-    StreamingTV = st.selectbox("Streaming TV", ["No", "Yes", "No internet service"])
-    StreamingMovies = st.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
+
+    # Only show internet options if customer has internet
+    if InternetService != "No":
+        OnlineSecurity = st.selectbox("Online Security", ["No", "Yes"])
+        OnlineBackup = st.selectbox("Online Backup", ["No", "Yes"])
+        DeviceProtection = st.selectbox("Device Protection", ["No", "Yes"])
+        TechSupport = st.selectbox("Tech Support", ["No", "Yes"])
+        StreamingTV = st.selectbox("Streaming TV", ["No", "Yes"])
+        StreamingMovies = st.selectbox("Streaming Movies", ["No", "Yes"])
+    else:
+        OnlineSecurity = "No internet service"
+        OnlineBackup = "No internet service"
+        DeviceProtection = "No internet service"
+        TechSupport = "No internet service"
+        StreamingTV = "No internet service"
+        StreamingMovies = "No internet service"
+
     Contract = st.selectbox("Contract Type", ["Month-to-month", "One year", "Two year"])
     PaperlessBilling = st.radio("Paperless Billing?", ["No", "Yes"], horizontal=True)
     PaymentMethod = st.selectbox("Payment Method", ["Bank transfer (automatic)", "Credit card (automatic)", "Electronic check", "Mailed check"])
