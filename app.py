@@ -108,8 +108,8 @@ if st.button("Predict Churn", use_container_width=True):
 
     input_df = pd.DataFrame([input_dict])
     input_scaled = scaler.transform(input_df)
-    probability = xgb_model.predict_proba(input_scaled)[0][1]
-    prediction = 1 if probability >= best_threshold else 0
+    probability = model.predict_proba(input_scaled)[0][1]
+    prediction = 1 if probability >= 0.35 else 0
     probability = model.predict_proba(input_scaled)[0][1]
 
     st.divider()
